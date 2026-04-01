@@ -1,10 +1,10 @@
 import sys
 from PyQt6.QtWidgets import (QApplication, QMainWindow, QVBoxLayout,
-                              QWidget, QScrollArea)
+                              QWidget)
 from PyQt6.QtCore import QTimer
 
 from helpers import INTERVAL
-from panels import CpuThroughputPanel
+from panels import CpuThroughputPanel, CpuTemperaturePanel, RamUtilizationPanel
 
 # =========================
 # Dark theme stylesheet
@@ -16,9 +16,6 @@ QMainWindow, QWidget {
 }
 QLabel {
     color: #e0e0e0;
-}
-QScrollArea {
-    border: none;
 }
 """
 
@@ -43,22 +40,19 @@ class MainWindow(QMainWindow):
         outer.setContentsMargins(6, 6, 6, 6)
         outer.setSpacing(6)
 
-        # Scrollable panel area (useful once multiple panels are added)
-        self.panel_container = QWidget()
-        self.panel_layout = QVBoxLayout(self.panel_container)
+        # Panels scale to fill the current window height.
+        self.panel_layout = QVBoxLayout()
         self.panel_layout.setContentsMargins(0, 0, 0, 0)
         self.panel_layout.setSpacing(8)
-
-        scroll = QScrollArea()
-        scroll.setWidget(self.panel_container)
-        scroll.setWidgetResizable(True)
-        outer.addWidget(scroll)
+        outer.addLayout(self.panel_layout, stretch=1)
 
         # Panel registry
         self.panels = []
 
         # --- Register panels here ---
         self.add_panel(CpuThroughputPanel())
+        self.add_panel(CpuTemperaturePanel())
+        self.add_panel(RamUtilizationPanel())
         # Future: self.add_panel(TemperaturePanel())
         # Future: self.add_panel(FanSpeedPanel())
 
@@ -69,7 +63,7 @@ class MainWindow(QMainWindow):
 
     def add_panel(self, panel):
         self.panels.append(panel)
-        self.panel_layout.addWidget(panel)
+        self.panel_layout.addWidget(panel, stretch=1)
 
     def _update_all(self):
         for panel in self.panels:
