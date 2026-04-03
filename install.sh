@@ -13,8 +13,8 @@ LAUNCHER="${BIN_DIR}/${APP_ID}"
 
 mkdir -p "${ICON_DIR}" "${BIN_DIR}" "$(dirname "${DESKTOP_FILE}")"
 
-if [[ ! -f "${SCRIPT_DIR}/cpu_util.py" ]]; then
-    echo "cpu_util.py not found in ${SCRIPT_DIR}" >&2
+if [[ ! -f "${SCRIPT_DIR}/cpu_monitor.py" ]]; then
+    echo "cpu_monitor.py not found in ${SCRIPT_DIR}" >&2
     exit 1
 fi
 
@@ -32,10 +32,10 @@ set -euo pipefail
 cd "${SCRIPT_DIR}"
 
 if [[ -x "${SCRIPT_DIR}/.venv/bin/python" ]]; then
-    exec "${SCRIPT_DIR}/.venv/bin/python" "${SCRIPT_DIR}/cpu_util.py"
+    exec "${SCRIPT_DIR}/.venv/bin/python" "${SCRIPT_DIR}/cpu_monitor.py"
 fi
 
-exec python3 "${SCRIPT_DIR}/cpu_util.py"
+exec python3 "${SCRIPT_DIR}/cpu_monitor.py"
 EOF
 
 chmod +x "${LAUNCHER}"
